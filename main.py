@@ -14,13 +14,35 @@ symbol_count = {
     "D": 8
 }
 
+symbol_value = { #symbol multiplier for higher output win in the slot machine
+    "A": 5, 
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+
+def check_winnings(columns, lines, bet, values):
+    winnings = 0
+    winning_lines = []
+    for line in range(lines):
+        symbol = columns[0][line] #we are checking whatever symbol is in the column of the current row
+        for column in columns:
+            symbol_to_check = column[line]
+            if symbol != symbol_to_check:
+                break
+        else:
+            winnings += values[symbol] * bet
+            winning_lines.append(line + 1)  # Add the winning line number
+
+    return winnings, winning_lines  # Return both winnings and winning_lines
+
 def get_slot_machine_spin(rows, cols, symbols):
     all_symbols = []
     for symbol, symbol_count in symbols.items(): #symbols.items, you get the keys and values associated with the dictionary
         for _ in range(symbol_count):
             all_symbols.append(symbol)
 
-    columns = [[], [], []]
+    columns = []
     for _ in range(cols):
         column = []
         current_symbols = all_symbols[:]    
@@ -30,6 +52,18 @@ def get_slot_machine_spin(rows, cols, symbols):
             column.append(value)
 
         columns.append(column)
+
+    return columns
+
+def print_slot_machine(columns):
+    for row in range(len(columns[0])):
+        for i, column in enumerate(columns):
+            if i != len(columns) - 1:
+                print(column[row], end=" | ")   #end tells the print statement what to end the line on INSTEAD of \n which says to go to the next line
+            else:
+                print(column[row], end="")
+
+        print()
 
 #Defining a Function To Be Called to Execute a Block of Code
 def deposit():
@@ -75,21 +109,37 @@ def get_bet (): #Repeated code from Deposit
 
     return amount
 
-def main():
-    balance = deposit()
+def spin(balance):
     lines = get_number_of_lines()
     while True:
         bet = get_bet()
         total_bet = bet * lines
 
-        if total_bet >= balance:
-            print("You do not have enough to bet that amount, your current balance is: ${balance}")
+        if total_bet > balance:
+            print(
+                f"You do not have enough to bet that amount, your current balance is: ${balance}")
         else:
             break
 
-    bet = get_bet()
-    print("You have deposited: $", balance)
-    total_bet = bet * lines
-    print(f"You are betting ${bet} on {lines} lines. Your total bet is equal to: ${total_bet}") #embed values with f
+    print(
+        f"You are betting ${bet} on {lines} lines. Your total bet is equal to: ${total_bet}") #embed values with f
+
+    slots =  get_slot_machine_spin(ROWS, COLS, symbol_count)
+    print_slot_machine(slots)
+    winnings, winnings_lines = check_winnings(slots, lines, bet, symbol_value)
+    print(f"You won ${winnings}.")
+    print(f"You won on lines:", *winnings_lines)
+    return winnings - total_bet
+
+def main():
+    balance = deposit()
+    while True:
+        print(f"Current balance is ${balance}")
+        answer = input("Press Enter to play OR Q to quit.")
+        if answer == "q":
+            break
+        balance += spin(balance)  # Pass the balance variable here
+
+    print(f"You left with ${balance}")
 
 main()

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A simple beginner friendly python project to practice Python.
+A simple beginner friendly python project I made to practice Python. The user is able to choose a deposit amount and decide a row (1-3) to bet on. Score will be multiplied based on valuation of the winning sum.
 
 ## Features
 
@@ -17,7 +17,7 @@ A simple beginner friendly python project to practice Python.
 2. Navigate to the project directory:
 
    ```bash
-   cd /Users/delazeri/Slot Machine/Youtube-Downloader
+   cd /Users/delazeri/Python Projects/Slot_Machine
    ```
 
 3. Install dependencies:
@@ -28,4 +28,6 @@ A simple beginner friendly python project to practice Python.
 
 4. Run the terminal:
 
-   python3 Slot_Machine.py "YOUTUBE VIDEO LINK"
+   python3 Slot_Machine.py 
+
+python main.py
